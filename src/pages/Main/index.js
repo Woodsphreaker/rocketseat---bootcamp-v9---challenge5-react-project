@@ -1,9 +1,14 @@
 import React from 'react'
 
+import { Title } from './styles'
+
 const Main = () => {
   return (
     <>
-      <h1>Main Page</h1>
+      <Title>
+        Main Page <small>small</small>
+        <p>teste</p>
+      </Title>
     </>
   )
 }
