@@ -1,8 +1,14 @@
 import React from 'react'
 import Routes from './routes'
+import GlobalStyled from './styles/global'
 
 const App = () => {
-  return <Routes />
+  return (
+    <>
+      <GlobalStyled />
+      <Routes />
+    </>
+  )
 }
 
 export default App
