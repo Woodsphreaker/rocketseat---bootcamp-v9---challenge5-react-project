@@ -1,7 +1,10 @@
 import React, { Component } from 'react'
 
+import { Link } from 'react-router-dom'
+
+import Container from '../../Components/Container'
 import { FaGithubAlt, FaSpinner, FaPlus } from 'react-icons/fa'
-import { Container, Form, SubmitButton } from './styles'
+import { Form, SubmitButton, List } from './styles'
 
 import api from '../../services/api'
 
@@ -10,6 +13,22 @@ class Main extends Component {
     newRepo: '',
     repositories: [],
     loading: false,
+  }
+
+  componentDidMount = () => {
+    const storageRepositories = localStorage.getItem('repositories')
+    if (storageRepositories) {
+      this.setState({
+        repositories: JSON.parse(storageRepositories),
+      })
+    }
+  }
+
+  componentDidUpdate = (prevProps, prevState) => {
+    const { repositories } = this.state
+    if (prevState.repositories !== repositories) {
+      localStorage.setItem('repositories', JSON.stringify(repositories))
+    }
   }
 
   handleSubmit = async ev => {
@@ -30,8 +49,6 @@ class Main extends Component {
       newRepo: '',
       loading: false,
     })
-
-    console.log(repositories)
   }
 
   handleInputChange = ev => {
@@ -40,7 +57,7 @@ class Main extends Component {
   }
 
   render() {
-    const { newRepo, loading } = this.state
+    const { newRepo, repositories, loading } = this.state
     return (
       <>
         <Container>
@@ -60,6 +77,18 @@ class Main extends Component {
               {loading ? <FaSpinner /> : <FaPlus />}
             </SubmitButton>
           </Form>
+
+          <List>
+            {repositories.map(repo => (
+              <li key={repo.name}>
+                <span>{repo.name}</span>
+                {/* <a>Detalhes</a> */}
+                <Link to={`/repository/${encodeURIComponent(repo.name)}`}>
+                  Detalhes
+                </Link>
+              </li>
+            ))}
+          </List>
         </Container>
       </>
     )
