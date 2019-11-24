@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 
 import Container from '../../Components/Container'
 import { FaGithubAlt, FaSpinner, FaPlus } from 'react-icons/fa'
-import { Form, SubmitButton, List } from './styles'
+import { Form, SubmitButton, List, ErrorMessage } from './styles'
 
 import api from '../../services/api'
 
@@ -12,6 +12,8 @@ class Main extends Component {
   state = {
     newRepo: '',
     repositories: [],
+    error: false,
+    errorMessage: '',
     loading: false,
   }
 
@@ -29,6 +31,7 @@ class Main extends Component {
     if (prevState.repositories !== repositories) {
       localStorage.setItem('repositories', JSON.stringify(repositories))
     }
+    console.log(this.state.repositories)
   }
 
   handleSubmit = async ev => {
@@ -38,8 +41,32 @@ class Main extends Component {
       loading: true,
     })
 
-    const { newRepo, repositories } = this.state
-    const { data } = await api.get(`/repos/${newRepo}`)
+    const { newRepo } = this.state
+
+    try {
+      if (this.hasRepository(newRepo)) {
+        throw new Error('Duplicate repository')
+      }
+
+      const { data } = await api.get(`/repos/${newRepo}`)
+      this.listRepos(data)
+    } catch (e) {
+      const errorMessage = {
+        404: 'Repository not found',
+        default: e.toString(),
+      }[e.response ? e.response.status : 'default']
+
+      this.setState({ error: true, errorMessage, loading: false })
+    }
+  }
+
+  handleInputChange = ev => {
+    const value = ev.target.value
+    this.setState({ newRepo: value })
+  }
+
+  listRepos = data => {
+    const { repositories } = this.state
     const repoAttributes = {
       name: data.full_name,
     }
@@ -48,16 +75,17 @@ class Main extends Component {
       repositories: [...repositories, repoAttributes],
       newRepo: '',
       loading: false,
+      error: false,
     })
   }
 
-  handleInputChange = ev => {
-    const value = ev.target.value
-    this.setState({ newRepo: value })
+  hasRepository = repo => {
+    const { repositories } = this.state
+    return repositories.some(({ name }) => name === repo)
   }
 
   render() {
-    const { newRepo, repositories, loading } = this.state
+    const { newRepo, repositories, loading, error, errorMessage } = this.state
     return (
       <>
         <Container>
@@ -66,7 +94,7 @@ class Main extends Component {
             Repositórios
           </h1>
 
-          <Form onSubmit={this.handleSubmit}>
+          <Form error={error} onSubmit={this.handleSubmit}>
             <input
               onChange={this.handleInputChange}
               type="text"
@@ -78,11 +106,12 @@ class Main extends Component {
             </SubmitButton>
           </Form>
 
+          {error && <ErrorMessage>{errorMessage}</ErrorMessage>}
+
           <List>
-            {repositories.map(repo => (
-              <li key={repo.name}>
+            {repositories.map((repo, i) => (
+              <li key={`${repo.name}-${i}`}>
                 <span>{repo.name}</span>
-                {/* <a>Detalhes</a> */}
                 <Link to={`/repository/${encodeURIComponent(repo.name)}`}>
                   Detalhes
                 </Link>

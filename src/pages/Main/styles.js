@@ -1,33 +1,13 @@
 import styled, { keyframes, css } from 'styled-components'
 
-const Container = styled.div`
-  max-width: 700px;
-  background-color: #fff;
-  border-radius: 4px;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-  padding: 30px;
-  margin: 80px auto;
-
-  h1 {
-    font-size: 20px;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-
-    svg {
-      margin-right: 10px;
-    }
-  }
-`
-
-const Form = styled.form`
+const Form = styled.form.attrs(() => {})`
   margin-top: 30px;
   display: flex;
   flex-direction: row;
 
   input {
     flex: 1;
-    border: 1px solid #eee;
+    border: 1px solid ${props => (props.error ? '#ff0000' : '#eee')};
     padding: 10px 15px;
     border-radius: 4px;
     font-size: 16px;
@@ -97,9 +77,19 @@ const List = styled.ul`
     color: #7159c1;
     text-decoration: none;
   }
-
-  span {
-  }
 `
 
-export { Container, Form, SubmitButton, List }
+const ErrorMessage = styled.span`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  margin-top: 5px;
+  margin-left: 2px;
+  color: #990000;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 15px;
+  font-style: italic;
+`
+
+export { Form, SubmitButton, List, ErrorMessage }
