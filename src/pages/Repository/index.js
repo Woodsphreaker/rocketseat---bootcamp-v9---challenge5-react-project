@@ -153,7 +153,7 @@ class Repository extends Component {
           <button disabled={page < 2} onClick={() => this.goToPage(page - 1)}>
             Prev
           </button>
-          <span>Página {page.toString()}</span>
+          <span>Page {page.toString()}</span>
           <button onClick={() => this.goToPage(page + 1)}>Next</button>
         </Pagination>
       </Container>
