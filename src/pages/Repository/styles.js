@@ -101,4 +101,66 @@ const IssuesList = styled.ul`
   }
 `
 
-export { Loading, Owner, IssuesList }
+const StateFilter = styled.div.attrs(props => {})`
+  display: flex;
+  justify-content: space-between;
+  margin-top: 30px;
+  padding: 15px 10px;
+  border: 1px solid #eee;
+  border-radius: 4px;
+
+  button {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    background-color: #7159c1;
+    color: #fff;
+    padding: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 5px;
+    border: none;
+
+    &:disabled {
+      background-color: #576574;
+      color: #fff;
+      cursor: not-allowed !important;
+    }
+  }
+`
+
+const Pagination = styled.div`
+  display: flex;
+  flex-direction: row;
+  margin-top: 20px;
+  padding: 20px 10px;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid #eee;
+
+  button {
+    background-color: #7159c1;
+    color: #fff;
+    font-size: 14px;
+    border: none;
+    border-radius: 4px;
+    width: 100px;
+    padding: 10px;
+    font-family: Arial, Helvetica, sans-serif;
+
+    &:disabled {
+      background-color: #576574;
+      color: #fff;
+      cursor: not-allowed !important;
+    }
+  }
+
+  span {
+    color: #7159c1;
+    font-size: 14px;
+    font-weight: bold;
+  }
+`
+
+export { Loading, Owner, IssuesList, StateFilter, Pagination }
